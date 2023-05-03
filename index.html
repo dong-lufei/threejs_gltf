@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js 加载模型</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.152.2/build/three.module.min.js"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import * as THREE from "https://unpkg.com/three@0.152.2/build/three.module.min.js"
+      import { OrbitControls } from "./OrbitControls.js"
+      import { GLTFLoader } from "./GLTFLoader.js"
+
+      // 创建场景
+      const scene = new THREE.Scene()
+
+      // 创建透视摄像头
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000,
+      )
+
+      // 创建 WebGL 渲染器
+      const renderer = new THREE.WebGLRenderer()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      document.body.appendChild(renderer.domElement)
+
+      // 创建立方体
+      const geometry = new THREE.BoxGeometry()
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      // geometry.translate(10, 0, 10)
+      const cube = new THREE.Mesh(geometry, material)
+      scene.add(cube)
+      // 设置摄像头位置
+      camera.position.z = 5
+      renderer.setClearColor(0x999999, 0.5) //
+      function animate() {
+        requestAnimationFrame(animate)
+
+        // 旋转立方体
+        cube.rotation.x += 0.01
+        cube.rotation.y += 0.01
+
+        // 渲染场景
+        renderer.render(scene, camera)
+      }
+
+      animate()
+
+      // 创建点光源
+      const pointLight = new THREE.PointLight(0xffffff, 1, 100)
+      pointLight.position.set(10, 10, 10)
+      scene.add(pointLight)
+
+      // 更换立方体材质
+      const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+      cube.material = cubeMaterial
+
+      // 创建轨道控制
+      const controls = new OrbitControls(camera, renderer.domElement)
+
+      // 窗口大小调整
+      window.addEventListener("resize", onWindowResize, false)
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight
+        camera.updateProjectionMatrix()
+        renderer.setSize(window.innerWidth, window.innerHeight)
+      }
+
+      // 加载 3D 模型
+      const loader = new GLTFLoader()
+      loader.load("./office_chair.gltf", function (gltf) {
+        gltf.scene.scale.set(2, 2, 2)
+        gltf.scene.position.set(-1.5, -2, 1)
+        scene.add(gltf.scene)
+      })
+    </script>
+  </body>
+</html>
