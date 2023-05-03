@@ -21,9 +21,9 @@
     </script>
 
     <script type="module">
-      import * as THREE from "https://unpkg.com/three@0.152.2/build/three.module.min.js"
-      import { OrbitControls } from "./OrbitControls.js"
-      import { GLTFLoader } from "./GLTFLoader.js"
+      import * as THREE from "three"
+      import { OrbitControls } from "./utils/OrbitControls.js"
+      import { GLTFLoader } from "./utils/GLTFLoader.js"
 
       // 创建场景
       const scene = new THREE.Scene()
@@ -86,7 +86,7 @@
 
       // 加载 3D 模型
       const loader = new GLTFLoader()
-      loader.load("./office_chair.gltf", function (gltf) {
+      loader.load("./assets/office_chair.gltf", function (gltf) {
         gltf.scene.scale.set(2, 2, 2)
         gltf.scene.position.set(-1.5, -2, 1)
         scene.add(gltf.scene)
